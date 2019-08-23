@@ -1,14 +1,39 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Ionic Blank
+      Panel de Controle
     </ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
-  </div>
+  <!-- <ion-card> -->
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+            <div>
+                
+              <ion-card>
+                <ion-card-header>
+                    <a routerLink='/login'>
+                  <img src="assets/icon/irec.png">
+                </a>
+                  <ion-card-title>I-Rec</ion-card-title>
+                </ion-card-header>
+              </ion-card>
+             
+            </div>
+          </ion-col>
+          <ion-col>
+            <div>
+              <ion-card>
+                <ion-card-header>
+                  <img src="assets/icon/ziit.png">
+                  <ion-card-title>ZIIT</ion-card-title>
+                </ion-card-header>             
+              </ion-card>
+            </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  <!-- </ion-card> -->
 </ion-content>
