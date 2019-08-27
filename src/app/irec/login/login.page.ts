@@ -4,6 +4,7 @@ import { AuthService } from '../../services/irec/auth.service';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import { HttpHeaderResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -17,12 +18,22 @@ export class LoginPage implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private authService: AuthService,
+    private auth: AuthService,
     public toastController: ToastController,
     public storage:  Storage
   ) { }
 
   ngOnInit() {
+    this.auth.authState.subscribe(state => {
+      console.log('Auth Status: ', state);
+      if(state){
+        this.router.navigate(['irec/dashboard']);
+      }else{
+        this.router.navigate(['irec/login']);
+      }
+    })
+    
+    
     this.loginForm = this.formBuilder.group({
     'email' : [null, [Validators.required, Validators.email]],
     'password' : [null, [Validators.required, Validators.minLength(6)]]
@@ -40,20 +51,28 @@ onFormSubmit(form: NgForm) {
   if (this.loginForm.invalid) {
     return;
     }else{
+      this.auth.login(form).subscribe(res => {
+        if (res) {
+         // this.auth.get();
+          this.presentToast('Login Success!');
+          this.router.navigate(['irec/dashboard']);
+          //this.authState.next(true);
+        }
+      })
 
-  this.authService.login(form)
-    .subscribe(res => {
-      if (res) {
-        this.storage.set('token', res.t);
-        console.log('passei pelo response - token');
-        console.log(res);
-        console.log(res.token);
-        this.router.navigateByUrl(('/dashboard'));
-      }
+  // this.auth.login(form)
+  //   .subscribe(res => {
+  //     if (res) {
+  //       this.storage.set('token', res);
+  //       console.log('passei pelo response - token');
+  //       console.log(res);
+  //       console.log(res.token);
+  //       this.router.navigateByUrl(('/dashboard'));
+  //     }
 
-    }, (err) => {
-      console.log(err);
-    });
+  //   }, (err) => {
+  //     console.log(err);
+  //   });
 }
 
 }
@@ -62,6 +81,8 @@ onFormSubmit(form: NgForm) {
 clear() {
   this.storage.clear().then(() => {
     console.log('Formulário limpo!');
+    this.router.navigate(['irec/login']);
+    
   });
 }
 

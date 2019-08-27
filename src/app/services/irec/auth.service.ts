@@ -1,33 +1,108 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { Platform } from '@ionic/angular';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+import { Storage } from '@ionic/storage';
+import { map } from 'rxjs/operators';
+
+const TOKEN_KEY = 'access-token';
+const TOKEN_CLIENT = 'client';
+const TOKEN_UID = 'uid';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  authState = new BehaviorSubject(false);
+
   //apiAuthUrl = 'http://localhost:3000/auth/';
   apiAuthUrl = 'http://irec.institutototum.com.br/auth/';
+  
+  constructor(
+    private http: HttpClient, 
+    private storage:Storage,
+    private platform: Platform
+    ) {
+      this.platform.ready().then(() => {
+        this.checkToken();
+      })
+    
+     }
 
-  constructor(private http: HttpClient) { }
+     login(data): Observable<any> {
 
-  login(data): Observable<any>{
-    return this.http.post<any>(this.apiAuthUrl + 'sign_in', data)
-    .pipe(
-      tap(_ => this.login('login'))
-    );
+      return this.http.post<any>(this.apiAuthUrl + 'sign_in', data)
+     }
+    // login(data): Observable<any> {
+     // let headers = new HttpHeaders();
+      //return this.http.post<any>(this.apiAuthUrl + 'sign_in', data, {headers: headers})
+      // .subscribe((res: Response) => {
+      //   that.data = res.json().data;
+      //   // console.log('Resposta');
+      //   // console.log(that.currentUser);
+      //   return that.data;
+      // this.storage.set(TOKEN_KEY, 'Bearer 123456789').then(res => {
+      //   this.authState.next(true);
+      //   console.log(data);
+       
+      // })
+    //}
+
+     async logout() {
+      const res = await this.storage.remove(TOKEN_KEY);
+       this.authState.next(false);
+    }
+
+ // login(data): Observable<any>{
+
+   //return this.http.post<any>(this.apiAuthUrl + 'sign_in', data)
+  //}
+
+  // logout (): Observable<any> {
+  //   return this.http.get<any>(this.apiAuthUrl + 'sign_out')
+  //     .pipe(
+  //       tap(_ => this.log('logout')),
+  //       catchError(this.handleError('logout', []))
+  //     );
+  // }
+
+//   login(){
+// return this.storage.set(TOKEN_KEY, 'Bearer 123456789').then(res => {
+//   this.authenticationState.next(true);
+// })
+//   }
+//   logout(){
+// return this.storage.remove('token').then(res => {
+//     this.authState.next(false);
+//   console.log('Logado? ?? ' , this.isAuthenticated())
+// })
+//  }
+
+  isAuthenticated(){
+    return this.authState.value;
+  }
+  
+  async getToken(){
+    return this.storage.get(TOKEN_KEY)
   }
 
-  logout (): Observable<any> {
-    return this.http.get<any>(this.apiAuthUrl + 'sign_out')
-      .pipe(
-        tap(_ => this.log('logout')),
-        catchError(this.handleError('logout', []))
-      );
+  async getClient(){
+    return this.storage.get(TOKEN_CLIENT)
   }
 
+  async getUid(){
+    return this.storage.get(TOKEN_UID)
+  }
+
+  async checkToken(){
+    const res = await this.storage.get(TOKEN_KEY);
+    if (res) {
+      this.authState.next(true);
+      console.log('Logado? ?? ', this.isAuthenticated());
+    }
+
+  }
   // register (data): Observable<any> {
   //   return this.http.post<any>(this.apiAuthUrl + 'sign_up', data)
   //     .pipe(
@@ -52,7 +127,7 @@ export class AuthService {
 
   /** Log a HeroService message with the MessageService */
   private log(message: string) {
-    console.log(message);
+    console.log('MEnsagem do Sistema: ', message);
   }
 
 

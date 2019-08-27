@@ -13,21 +13,29 @@ export class DashboardPage implements OnInit {
 
   constructor(private router: Router,
     public storage:  Storage,
-    public authService: AuthService
+    public auth: AuthService
     ) { }
 
   ngOnInit() {
+    var testes = this.storage.get("access-token");
+    console.log(testes);
   }
 
-  logout() {
-    this.authService.logout()
-      .subscribe(res => {
-        console.log(res);
-        this.storage.remove('token');
-        this.router.navigate(['login']);
-      });
-      this.clear();
+  logout(){
+    this.auth.logout();
+    this.router.navigate(['irec/login']);
   }
+
+  
+
+  //   this.authService.logout()
+  //     .subscribe(res => {
+  //       console.log(res);
+  //       this.storage.remove('token');
+  //       this.router.navigate(['login']);
+  //     });
+  //     this.clear();
+  // }
 
   clear() {
     this.storage.clear().then(() => {
@@ -36,7 +44,7 @@ export class DashboardPage implements OnInit {
   }
   
   gotoTodo(){
-    this.router.navigate(['todo']);
+    this.router.navigate(['irec/todo']);
 }
 
 }

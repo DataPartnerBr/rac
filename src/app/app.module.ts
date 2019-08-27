@@ -19,7 +19,7 @@ import { IonicStorageModule } from '@ionic/storage';
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, HttpClientModule, IonicModule.forRoot(), IonicStorageModule.forRoot({
-    name: '__DB4LL',
+    name: '__DBHAT',
     driverOrder: ['websql', 'indexeddb', 'sqlite', ]
   }), AppRoutingModule],
   providers: [

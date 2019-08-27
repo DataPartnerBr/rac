@@ -1,12 +1,16 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuardService } from './services/irec/auth-guard.service';
+
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)},
-  { path: 'login', loadChildren: './irec/login/login.module#LoginPageModule' },
-  { path: 'todo', loadChildren: './irec/todo/todo.module#TodoPageModule' },
-  { path: 'dashboard', loadChildren: './irec/dashboard/dashboard.module#DashboardPageModule' },
+  { path: 'irec',
+ // canActivate: [AuthGuardService],
+  loadChildren: './irec/irec-routing.module#IrecRoutingModule'
+}
+
 ];
 
 @NgModule({

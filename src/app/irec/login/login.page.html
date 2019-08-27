@@ -1,6 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Panel de Controle I-Rec</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="secondary" href="/" routerDirection="forward">
+        <ion-icon slot="icon-only" name="exit">Home</ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -37,12 +42,12 @@
         <ion-button expand="full" color="tertiary" type="submit" >Login</ion-button>
         <ion-button expand="full" color="secondary" (click)="clear()" type="reset" >Limpar</ion-button>
 
-        <ion-row>
+        <!-- <ion-row>
             <div text-center>
           If you don't have an account, please <a routerLink='/register'>
             register</a> first!
             </div>
-        </ion-row>
+        </ion-row> -->
       </ion-card-content>
      
     </form>
